@@ -1,17 +1,40 @@
 import { useState } from "react";
 
+// ✅ Admin credentials — change these to whatever you want
+const ADMIN_EMAIL = "admin@goodnessglam.com";
+const ADMIN_PASSWORD = "admin123";
+
 export default function LoginPage({ navigate, onLogin }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = () => {
-    if (!form.email || !form.password) return;
+    if (!form.email || !form.password) {
+      setError("Please fill in all fields.");
+      return;
+    }
+    setError("");
     setLoading(true);
+
     setTimeout(() => {
-      const isAdmin = form.email.includes("admin");
-      onLogin(isAdmin);
+      // ✅ Check admin credentials
+      if (form.email === ADMIN_EMAIL && form.password === ADMIN_PASSWORD) {
+        localStorage.setItem("gg_user", JSON.stringify({ email: form.email, role: "admin" }));
+        onLogin(true); // admin = true
+      } else if (form.password.length >= 6) {
+        // Regular user login
+        localStorage.setItem("gg_user", JSON.stringify({ email: form.email, role: "user" }));
+        onLogin(false); // admin = false
+      } else {
+        setError("Invalid credentials. Please try again.");
+      }
       setLoading(false);
-    }, 1200);
+    }, 1000);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleSubmit();
   };
 
   return (
@@ -34,6 +57,7 @@ export default function LoginPage({ navigate, onLogin }) {
                 placeholder="you@example.com"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
+                onKeyDown={handleKeyDown}
                 className="w-full border border-[#E8E0D8] rounded-xl px-4 py-3 text-[#1C1C1C] placeholder-[#C0B8B0] focus:outline-none focus:border-[#B8956A] transition-colors"
               />
             </div>
@@ -47,9 +71,14 @@ export default function LoginPage({ navigate, onLogin }) {
                 placeholder="••••••••"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
+                onKeyDown={handleKeyDown}
                 className="w-full border border-[#E8E0D8] rounded-xl px-4 py-3 text-[#1C1C1C] placeholder-[#C0B8B0] focus:outline-none focus:border-[#B8956A] transition-colors"
               />
             </div>
+
+            {error && (
+              <p className="text-red-500 text-sm bg-red-50 px-4 py-2 rounded-xl">{error}</p>
+            )}
 
             <button
               onClick={handleSubmit}
@@ -84,9 +113,9 @@ export default function LoginPage({ navigate, onLogin }) {
         </p>
 
         {/* Admin hint */}
-        <p className="text-center text-xs text-[#C0B8B0] mt-3">
-          💡 Use "admin@..." email to login as admin
-        </p>
+        <div className="text-center text-xs text-[#C0B8B0] mt-3 space-y-1">
+          <p>💡 Admin: admin@goodnessglam.com / admin123</p>
+        </div>
       </div>
     </div>
   );

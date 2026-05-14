@@ -13,7 +13,16 @@ export default function App() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   function navigate(p) {
-    console.log("Navigating to:", p);
+    // ✅ Protect admin route — only admins can access
+    if (p === "admin" && !isAdmin) {
+      setPage("login");
+      return;
+    }
+    // ✅ Protect dashboard — only logged in users
+    if (p === "dashboard" && !isLoggedIn) {
+      setPage("login");
+      return;
+    }
     setPage(p);
     window.scrollTo(0, 0);
   }
@@ -22,12 +31,15 @@ export default function App() {
     setIsLoggedIn(true);
     setIsAdmin(admin);
     setPage(admin ? "admin" : "dashboard");
+    window.scrollTo(0, 0);
   }
 
   function handleLogout() {
     setIsLoggedIn(false);
     setIsAdmin(false);
+    localStorage.removeItem("gg_user");
     setPage("home");
+    window.scrollTo(0, 0);
   }
 
   return (
@@ -45,7 +57,7 @@ export default function App() {
         {page === "dashboard" && <DashboardPage navigate={navigate} />}
         {page === "login"     && <LoginPage     navigate={navigate} onLogin={handleLogin} />}
         {page === "signup"    && <SignupPage     navigate={navigate} onLogin={handleLogin} />}
-        {page === "admin"     && <AdminPage     navigate={navigate} />}
+        {page === "admin"     && <AdminPage     navigate={navigate} onLogout={handleLogout} />}
       </main>
     </div>
   );

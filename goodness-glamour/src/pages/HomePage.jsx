@@ -1,4 +1,5 @@
 import { useState } from "react";
+import GeminiChatSidebar from "../components/GeminiChatSidebar";
 
 const services = [
   {
@@ -105,7 +106,7 @@ export default function HomePage({ navigate }) {
       }}>
         {/* Background image */}
         <img
-          src="https://media.istockphoto.com/id/1391187647/photo/stylish-modern-barber-chairs-in-black-and-grey-barbershop-interior.jpg?s=1024x1024&w=is&k=20&c=gWZ1Ab3FOwUT1YMn0GxWnldb0qnd60IE4XkMYrAM8CM="
+          src="https://static.wixstatic.com/media/fa47b7_005bcd54fdad4454ab5cb8e78ef44de9~mv2.png/v1/fill/w_980,h_980,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/fa47b7_005bcd54fdad4454ab5cb8e78ef44de9~mv2.png"
           alt="Salon hero"
           style={{
             position: "absolute", inset: 0,
@@ -440,7 +441,7 @@ export default function HomePage({ navigate }) {
           © 2026 Goodness Glamour. All rights reserved.
         </div>
       </footer>
-
+<GeminiChatSidebar />
     </div>
   );
 }
